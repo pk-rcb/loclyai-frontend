@@ -324,6 +324,8 @@ const AuthorityAuth = () => {
                       <option value="">Select Municipality (Post Office)</option>
                       {postOffices.map((po, idx) => (
                         <option key={idx} value={po.Name}>{po.Name}</option>
+                      ))}
+                    </select>
                     ) : (
                       <input
                         id="authorityMunicipality"
