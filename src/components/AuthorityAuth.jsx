@@ -76,17 +76,11 @@ const AuthorityAuth = () => {
         setDistrict(state); // fallback district to state name as zippopotamus doesn't provide district
         setPostOffices(offices);
       } else {
-        setErrors((prev) => ({ ...prev, pincode: 'Invalid Pincode' }));
-        setStateName('');
-        setDistrict('');
-        setPostOffices([]);
+        setErrors((prev) => ({ ...prev, pincode: 'Pincode not found. Please enter details manually.' }));
       }
     } catch (err) {
       console.error(err);
-      setErrors((prev) => ({ ...prev, pincode: 'Failed to fetch location data' }));
-      setStateName('');
-      setDistrict('');
-      setPostOffices([]);
+      setErrors((prev) => ({ ...prev, pincode: 'Pincode API unavailable. Please enter details manually.' }));
     } finally {
       setIsLoadingLocation(false);
     }
@@ -302,24 +296,24 @@ const AuthorityAuth = () => {
                 {errors.pincode && <span className="aform-error">{errors.pincode}</span>}
               </div>
 
-              {stateName && district && (
+              {pincode.length === 6 && (
                 <div className="aform-group" style={{ display: 'flex', gap: '10px' }}>
                   <div style={{ flex: 1 }}>
                     <label className="aform-label">State</label>
-                    <input type="text" className="aform-input" value={stateName} disabled />
+                    <input type="text" className="aform-input" value={stateName} onChange={(e) => setStateName(e.target.value)} disabled={isSubmitting} placeholder="e.g. Maharashtra" />
                   </div>
                   <div style={{ flex: 1 }}>
                     <label className="aform-label">District</label>
-                    <input type="text" className="aform-input" value={district} disabled />
+                    <input type="text" className="aform-input" value={district} onChange={(e) => setDistrict(e.target.value)} disabled={isSubmitting} placeholder="e.g. Mumbai" />
                   </div>
                 </div>
               )}
 
-              {postOffices.length > 0 && (
+              {pincode.length === 6 && (
                 <>
                   <div className="aform-group">
                     <label htmlFor="authorityMunicipality" className="aform-label">Municipality</label>
-                    <select
+                    {postOffices.length > 0 ? (
                       id="authorityMunicipality"
                       className={`aform-input ${errors.municipality ? 'aform-input-error' : ''}`}
                       value={municipality}
@@ -329,8 +323,17 @@ const AuthorityAuth = () => {
                       <option value="">Select Municipality (Post Office)</option>
                       {postOffices.map((po, idx) => (
                         <option key={idx} value={po.Name}>{po.Name}</option>
-                      ))}
-                    </select>
+                    ) : (
+                      <input
+                        id="authorityMunicipality"
+                        type="text"
+                        className={`aform-input ${errors.municipality ? 'aform-input-error' : ''}`}
+                        placeholder="e.g. BMC"
+                        value={municipality}
+                        onChange={(e) => setMunicipality(e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    )}
                     {errors.municipality && <span className="aform-error">{errors.municipality}</span>}
                   </div>
 
