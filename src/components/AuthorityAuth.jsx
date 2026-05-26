@@ -314,8 +314,9 @@ const AuthorityAuth = () => {
                   <div className="aform-group">
                     <label htmlFor="authorityMunicipality" className="aform-label">Municipality</label>
                     {postOffices.length > 0 ? (
-                      id="authorityMunicipality"
-                      className={`aform-input ${errors.municipality ? 'aform-input-error' : ''}`}
+                      <select
+                        id="authorityMunicipality"
+                        className={`aform-input ${errors.municipality ? 'aform-input-error' : ''}`}
                       value={municipality}
                       onChange={(e) => setMunicipality(e.target.value)}
                       disabled={isSubmitting}
